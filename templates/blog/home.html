@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load blog_filter %}
+{% block content %}
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="table-dark">
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if blog_list %}
+        {% for blog in blog_list %}
+        <tr>
+            <td>
+                {{ blog_list.paginator.count|sub:blog_list.start_index|sub:forloop.counter0|add:1 }}
+            </td>
+            <td>
+                <a href="{% url 'blog:detail' blog.id %}">{{ blog.title }}</a>
+                {% if blog.comment_set.count > 0 %}
+                    <span class="text-danger small mx-2">{{ blog.comment_set.count }}</span>
+                {% endif %}
+            </td>
+            <td>{{ blog.pub_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3">블로그 글이 없습니다.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        {% if blog_list.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ blog_list.previous_page_number }}">이전</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+        {% endif %}
+
+        {% for page_number in blog_list.paginator.page_range %}
+            {% if page_number >= blog_list.number|add:-5 and page_number <= blog_list.number|add:5 %}
+            {% if page_number == blog_list.number %}
+                <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+            {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if blog_list.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ blog_list.next_page_number }}">다음</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+           </li>
+        {% endif %}
+    </ul>
+
+    <a href="{%  url 'blog:blog_create' %}" class="btn btn-primary">글쓰기</a>
+</div>
+{% endblock %}

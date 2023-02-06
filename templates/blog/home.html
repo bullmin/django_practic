@@ -68,7 +68,8 @@
            </li>
         {% endif %}
     </ul>
-
+    {% if user.is_superuser %}
     <a href="{%  url 'blog:blog_create' %}" class="btn btn-primary">글쓰기</a>
+    {% endif %}
 </div>
 {% endblock %}

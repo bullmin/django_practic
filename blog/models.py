@@ -6,6 +6,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     pub_date = models.DateTimeField()
     body = models.TextField()
+    modify_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -16,3 +17,4 @@ class Comment(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     body = models.TextField()
     pub_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
